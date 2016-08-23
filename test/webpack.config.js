@@ -30,6 +30,10 @@ module.exports = [
         quality: "65-90",
         speed: 4
       },
+      mozJpeg: {
+        quality: 50,
+        progressive: true
+      },
       svgo:{
         plugins: [
           {
