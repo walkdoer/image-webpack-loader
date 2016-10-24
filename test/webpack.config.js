@@ -26,10 +26,7 @@ module.exports = [
       loaders: commonLoaders
     },
     imageWebpackLoader: {
-      pngquant:{
-        quality: "65-90",
-        speed: 4
-      },
+      pngquant:{},
       mozJpeg: {
         quality: 50,
         progressive: true
