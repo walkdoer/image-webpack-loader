@@ -12,7 +12,7 @@ var mkdirp = require('mkdirp');
 var cwd = process.cwd();
 var compressFolder = path.join(cwd, '.compress');
 var fs = require('fs');
-
+var md5File = require('md5-file')
 mkdirp.sync(compressFolder);
 
 module.exports = function(content) {
@@ -21,6 +21,9 @@ module.exports = function(content) {
   var resourcePath = this.resourcePath;
   var filename = path.basename(resourcePath);
   var dirname = path.dirname(resourcePath);
+  var fileExt = path.extname(resourcePath);
+  var fileHash = md5File.sync(resourcePath);
+  var filenameWithoutExt = path.basename(resourcePath, fileExt);
 
   var writeFolder = path.join(compressFolder, dirname.replace(cwd, ''));
   var config = loaderUtils.getLoaderConfig(this, "imageWebpackLoader");
@@ -52,7 +55,7 @@ module.exports = function(content) {
     plugins.push(imageminSvgo(options.svgo));
     plugins.push(imageminPngquant(options.pngquant));
     plugins.push(imageminOptipng({optimizationLevel: options.optimizationLevel}));
-    var writeDest = path.join(writeFolder, filename);
+    var writeDest = path.join(writeFolder, `${filenameWithoutExt}.${fileHash}${fileExt}`);
     if (fs.existsSync(writeDest)) {
       callback(null, fs.readFileSync(writeDest));
       debug(`图片: ${chalk.blue.underline(filename)} 命中缓存 ${writeDest} 处理耗时: ${Date.now() - s1} m`);
